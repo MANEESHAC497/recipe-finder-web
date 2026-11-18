@@ -1,82 +1,76 @@
 
-const recipes = [
-    {
-        name: "Chicken Biryani",
-        meal: "Lunch",
-        image: "https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg",
-        ingredients: "Chicken, Rice, Onion, Spices",
-        instructions: "Cook chicken with spices. Prepare rice and layer with chicken. Cook until done."
-    },
-    {
-        name: "Pasta",
-        meal: "Dinner",
-        image: "https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg",
-        ingredients: "Pasta, Tomato, Garlic, Cheese",
-        instructions: "Boil pasta. Prepare tomato sauce and mix with pasta and cheese."
-    },
-    {
-        name: "Pancakes",
-        meal: "Breakfast",
-        image: "https://www.themealdb.com/images/media/meals/rwuyqx1511383174.jpg",
-        ingredients: "Flour, Milk, Eggs, Sugar",
-        instructions: "Mix all ingredients. Pour batter into a pan and cook both sides."
-    }
-];
+const API_KEY = "YOUR_API_KEY";
 
-function displayRecipes(data) {
+async function searchRecipes() {
+    const query = document.getElementById("searchInput").value.trim();
     const list = document.getElementById("recipeList");
-    list.innerHTML = "";
 
-    if (data.length === 0) {
-        list.innerHTML = "<p>No recipes found!</p>";
+    if (!query) {
+        alert("Please enter a recipe name");
         return;
     }
 
-    data.forEach(recipe => {
-        list.innerHTML += `
-            <div class="recipe-card">
-                <img src="${recipe.image}" alt="${recipe.name}">
-                <h3>${recipe.name}</h3>
-                <p><b>Meal:</b> ${recipe.meal}</p>
-                <p><b>Ingredients:</b> ${recipe.ingredients}</p>
-                <button onclick="showDetails('${recipe.name}')">
-                    View Recipe
-                </button>
-            </div>
-        `;
-    });
+    list.innerHTML = "<p>Loading recipes...</p>";
+
+    try {
+        const response = await fetch(
+            `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=12&addRecipeInformation=true&apiKey=${API_KEY}`
+        );
+
+        if (!response.ok) {
+            throw new Error("API request failed: " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!data.results || data.results.length === 0) {
+            list.innerHTML = "<p>No recipes found!</p>";
+            return;
+        }
+
+        list.innerHTML = "";
+
+        data.results.forEach(recipe => {
+            list.innerHTML += `
+                <div class="recipe-card">
+                    <img src="${recipe.image}" alt="${recipe.title}">
+                    <h3>${recipe.title}</h3>
+                    <p>Ready in: ${recipe.readyInMinutes || "N/A"} minutes</p>
+                    <button onclick="showRecipe(${recipe.id})">
+                        View Recipe
+                    </button>
+                </div>
+            `;
+        });
+
+    } catch (error) {
+        list.innerHTML = "<p>Unable to load recipes. Please try again.</p>";
+        console.error(error);
+    }
 }
 
-function searchRecipes() {
-    const search = document.getElementById("searchInput").value.toLowerCase();
+async function showRecipe(id) {
+    try {
+        const response = await fetch(
+            `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`
+        );
 
-    const filtered = recipes.filter(recipe =>
-        recipe.name.toLowerCase().includes(search) ||
-        recipe.ingredients.toLowerCase().includes(search)
-    );
+        if (!response.ok) {
+            throw new Error("Recipe details unavailable");
+        }
 
-    displayRecipes(filtered);
+        const recipe = await response.json();
+
+        alert(
+            recipe.title + "\n\n" +
+            "Ingredients:\n" +
+            recipe.extendedIngredients.map(i => i.original).join("\n") +
+            "\n\nInstructions:\n" +
+            (recipe.instructions || "No instructions available")
+        );
+
+    } catch (error) {
+        alert("Unable to load recipe details.");
+    }
 }
-
-function showDetails(name) {
-    const recipe = recipes.find(item => item.name === name);
-
-    alert(
-        recipe.name + "\n\nIngredients: " +
-        recipe.ingredients + "\n\nInstructions: " +
-        recipe.instructions
-    );
-}
-
-document.getElementById("mealFilter").addEventListener("change", function() {
-    const meal = this.value;
-
-    const filtered = meal
-        ? recipes.filter(recipe => recipe.meal === meal)
-        : recipes;
-
-    displayRecipes(filtered);
-});
-
-displayRecipes(recipes);
 
