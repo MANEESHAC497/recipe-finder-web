@@ -22,7 +22,14 @@ app.get("/api/recipes", async (req, res) => {
 
         url.searchParams.set("query", query);
         url.searchParams.set("number", "12");
-        url.searchParams.set(
+        const mealType = req.query.type;
+
+       if (mealType === "Breakfast") {
+        url.searchParams.set("type", "breakfast");
+            } else if (mealType === "Lunch" || mealType === "Dinner") {
+              url.searchParams.set("type", "main course");
+              }
+             url.searchParams.set(
             "apiKey",
             process.env.SPOONACULAR_API_KEY
         );
