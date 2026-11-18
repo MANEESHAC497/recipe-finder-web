@@ -1,10 +1,9 @@
-const API_KEY = "YOUR_API_KEY";
 async function searchRecipes() {
     const query = document.getElementById("searchInput").value.trim();
     const list = document.getElementById("recipeList");
 
     if (!query) {
-        alert("Please enter a recipe name");
+        alert("Enter a recipe name");
         return;
     }
 
@@ -12,28 +11,25 @@ async function searchRecipes() {
 
     try {
         const response = await fetch(
-            `https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=12&addRecipeInformation=true&apiKey=${API_KEY}`
+            `/api/recipes?query=${encodeURIComponent(query)}`
         );
 
-        if (!response.ok) {
-            throw new Error("API request failed: " + response.status);
-        }
+        if (!response.ok) throw new Error("Search failed");
 
         const data = await response.json();
+
+        list.innerHTML = "";
 
         if (!data.results || data.results.length === 0) {
             list.innerHTML = "<p>No recipes found!</p>";
             return;
         }
 
-        list.innerHTML = "";
-
         data.results.forEach(recipe => {
             list.innerHTML += `
                 <div class="recipe-card">
-                    <img src="${recipe.image}" alt="${recipe.title}">
+                    <img src="${recipe.image}" alt="Recipe">
                     <h3>${recipe.title}</h3>
-                    <p>Ready in: ${recipe.readyInMinutes || "N/A"} minutes</p>
                     <button onclick="showRecipe(${recipe.id})">
                         View Recipe
                     </button>
@@ -42,33 +38,30 @@ async function searchRecipes() {
         });
 
     } catch (error) {
-        list.innerHTML = "<p>Unable to load recipes. Please try again.</p>";
-        console.error(error);
+        list.innerHTML = "<p>Unable to load recipes. Try again.</p>";
     }
 }
 
 async function showRecipe(id) {
     try {
-        const response = await fetch(
-            `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`
-        );
+        const response = await fetch(`/api/recipes/${id}`);
 
-        if (!response.ok) {
-            throw new Error("Recipe details unavailable");
-        }
+        if (!response.ok) throw new Error("Details failed");
 
         const recipe = await response.json();
 
+        const ingredients = recipe.extendedIngredients
+            .map(item => item.original)
+            .join("\n");
+
         alert(
-            recipe.title + "\n\n" +
-            "Ingredients:\n" +
-            recipe.extendedIngredients.map(i => i.original).join("\n") +
+            recipe.title +
+            "\n\nIngredients:\n" + ingredients +
             "\n\nInstructions:\n" +
-            (recipe.instructions || "No instructions available")
+            (recipe.instructions || "Not available")
         );
 
     } catch (error) {
-        alert("Unable to load recipe details.");
+        alert("Unable to load recipe details");
     }
 }
-
