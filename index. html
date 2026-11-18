@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>🍽️ Recipe Finder</h1>
+    <p>Find your favourite recipes easily!</p>
+</header>
+
+<main>
+    <section class="search-box">
+        <input type="text" id="searchInput"
+        placeholder="Search recipes...">
+        <button onclick="searchRecipes()">Search</button>
+    </section>
+
+    <section class="filters">
+        <select id="mealFilter">
+            <option value="">All Meals</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+        </select>
+    </section>
+
+    <h2>Popular Recipes</h2>
+    <div id="recipeList" class="recipe-list"></div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
 
