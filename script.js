@@ -13,7 +13,9 @@ async function searchRecipes() {
         const response = await fetch(
            `/api/recipes?query=${encodeURIComponent(query)}&type=${encodeURIComponent(document.getElementById("mealFilter").value)}`
        
-          if (!response.ok) throw new Error("Search failed");
+          );
+            
+            if (!response.ok) throw new Error("Search failed");
 
         const data = await response.json();
 
