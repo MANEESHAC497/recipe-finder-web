@@ -127,4 +127,7 @@ async function searchRecipes() {
         alert("Unable to load recipe details");
     }
 }
+document.getElementById("mealFilter").addEventListener("change", function() {
+    searchRecipes();
+});
 
