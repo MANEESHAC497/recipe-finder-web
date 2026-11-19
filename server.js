@@ -26,7 +26,13 @@ app.get("/api/recipes", async (req, res) => {
         if (cuisine) {
           url.searchParams.set("cuisine", cuisine);
                }
-         const mealType = req.query.type;
+        const diet = req.query.diet;
+
+     if (diet) {
+    url.searchParams.set("diet", diet);
+         }
+
+     const mealType = req.query.type;
 
        if (mealType === "Breakfast") {
         url.searchParams.set("type", "breakfast");
