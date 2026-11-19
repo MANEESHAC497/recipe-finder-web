@@ -35,6 +35,7 @@ async function searchRecipes() {
                         View Recipe
                     </button>
                 </div>
+                `;
             
         });
 
