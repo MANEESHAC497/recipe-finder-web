@@ -13,7 +13,7 @@ async function searchRecipes() {
         const response = await fetch(
            `/api/recipes?query=${encodeURIComponent(query)}&type=${encodeURIComponent(document.getElementById("mealFilter").value)}
        &cuisine=${encodeURIComponent(document.getElementById("cuisineFilter").value)}
-       &diet=${encodeURIComponent(document. getElementById("dietFilter"). value)}`;
+       &diet=${encodeURIComponent(document.getElementById("dietFilter"). value)}`;
           );
             
             if (!response.ok) throw new Error("Search failed");
