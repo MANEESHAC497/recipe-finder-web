@@ -131,4 +131,7 @@ async function searchRecipes() {
 document.getElementById("mealFilter").addEventListener("change", function() {
     searchRecipes();
 });
+document.getElementById("cuisineFilter").addEventListener("change", function() {
+    searchRecipes();
+});
 
