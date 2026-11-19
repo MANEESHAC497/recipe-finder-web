@@ -22,7 +22,11 @@ app.get("/api/recipes", async (req, res) => {
 
         url.searchParams.set("query", query);
         url.searchParams.set("number", "12");
-        const mealType = req.query.type;
+        const cuisine = req.query.cuisine;
+        if (cuisine) {
+          url.searchParams.set("cuisine", cuisine);
+               }
+         const mealType = req.query.type;
 
        if (mealType === "Breakfast") {
         url.searchParams.set("type", "breakfast");
