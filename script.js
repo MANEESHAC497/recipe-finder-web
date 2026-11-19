@@ -10,13 +10,12 @@ async function searchRecipes() {
     list.innerHTML = "<p>Loading recipes...</p>";
 
     try {
-        const response = await fetch(
-           `/api/recipes?query=${encodeURIComponent(query)}&type=${encodeURIComponent(document.getElementById("mealFilter").value)}
-       &cuisine=${encodeURIComponent(document.getElementById("cuisineFilter").value)}
-       &diet=${encodeURIComponent(document.getElementById("dietFilter"). value)}`;
-          );
-            
-            if (!response.ok) throw new Error("Search failed");
+
+
+const response = await fetch(
+    `/api/recipes?query=${encodeURIComponent(query)}&type=${encodeURIComponent(document.getElementById("mealFilter").value)}&cuisine=${encodeURIComponent(document.getElementById("cuisineFilter").value)}&diet=${encodeURIComponent(document.getElementById("dietFilter").value)}`
+);
+    if (!response.ok) throw new Error("Search failed");
 
         const data = await response.json();
 
