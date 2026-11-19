@@ -27,8 +27,7 @@ app.get("/api/recipes", async (req, res) => {
           url.searchParams.set("cuisine", cuisine);
                }
         const diet = req.query.diet;
-
-     if (diet) {
+            if (diet) {
     url.searchParams.set("diet", diet);
          }
 
