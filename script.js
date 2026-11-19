@@ -135,4 +135,6 @@ document.getElementById("mealFilter").addEventListener("change", function() {
 document.getElementById("cuisineFilter").addEventListener("change", function() {
     searchRecipes();
 });
-
+document.getElementById("dietFilter").addEventListener("change", function() {
+    searchRecipes();
+});
